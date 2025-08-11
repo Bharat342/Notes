@@ -1,0 +1,1173 @@
+ 
+ #############
+    TO DO 
+ #############
+
+ uncomplete programs :
+ ---------------------
+ -> ManyToMany
+ -> 19 No project greet() method
+ -> 51,52,53 swagger video and api project using aws.
+ -> 57 Exception Handling in REST API
+ -> REST API Architecture Principles (Youtube)
+
+ Video May should watch Again : 
+---------------------------------
+ -> 26 : doubts about fake exp, survibal etc. 
+ -> 32 : Spring Web MVC 
+ -> 36 : create form using jstl and inserting data into database table and fetching the in the form of table.
+ -> 39 : InterCeptor contept in Spring Web MVC.
+ -> 47 : Fundamental of Rest API.
+ -> 56 : Spring Data Rest
+ -> 59 : Actuator video's last 5 minute part 
+ -> 65 : 31 minutes for all the definitions for microservice concepts.
+
+ -> Dependency Injection
+ -> Spring Bean
+ -> IOC Container (Inversion of Control)
+
+  -> How can we represents java class as a Spring Bean
+     -> XML Approach ? (Outdated)
+	ex : <bean id="" class="pkg.ClassName"/> (using bean tag inside XML file)
+
+     -> Annotation Approach ? (Recommended)
+	ex: @Component, @Service, @Repository etc..
+ 
+ -> How to Start IOC Container 
+     -> 1. Bean Factory ? (Interface) - outdated
+     -> 2. ApplicationContext ? (Interface)
+ -> Bean Configuration File (it holds bean Definition) ?
+	-> (target class, dependent class, Dependency Injection type(Constructor, Setter, Field))
+ -> Bean Definition ?
+ -> pom.xml
+ -> bean tag
+ -> <property /> tag (represents Setter Injection)
+ -> <constructor-arg /> tag ? (represents Constructor Injection)
+ -> getBean() method ?
+	# it is used to get the bean object from the container.
+ -> scope="prototype" in bean tag ? 
+ -> singleton bean object ?
+
+  --> Bean Scopes
+
+ -> Bean scopes ?
+	# Scope represents how many objects should be created for a Spring Bean.
+ -> Why Spring Bean as defalut Singleton ?
+
+   --> AutoWiring
+ -> we can inject dependent bean into target bean in 2 ways
+      -> Manual Wiring
+      -> Auto Wiring
+ -> Manual wiring & Auto Wiring ?
+  Manual Wiring => Manual wiring means the program will inject dependent object into target object using <proprty/> tag (Setter                    Injection)  or <construcotr/> tag (Constructor Injection) using 'ref' attribute.
+
+ <bean id="petrolEngine" class="com.bharatnaik.beans.PetrolEngine"/>
+    
+    <bean id="car" class="com.bharatnaik.beans.Car" scope="prototype">
+    	<constructor-arg name="engine" ref="petrolEngine"/>
+    </bean>
+
+-> Autowiring means IOC Container will identify dependent bean and it will inject into target bean depends on autowiring modes (we no need to use any 'ref' attribute in bean configuraion)
+-> Autowiring will work based on below modes
+	1) byName
+	2) byType
+	3) constructor
+	4) no
+ NOTE : AutoWiring will not bydefault, We have to enable autowiring on target bean like below.
+
+	<bean id="id" class="pkg.ClassName" auto-wire="byName | byType | constructor | no"/>
+
+
+ -> autowire-candidate="false/true" ?
+ -> autowire="constructor" -> When we want to perform constructor injection through autowiring 
+then we need to specify autowire="constructor" then it will do constructor dependency injection.
+
+-> What is the difference between Manual Wiring and Auto Wiring ?
+	-> we can inject depedent object into target object into 2 ways 
+	1. manual wiring
+		-> manual means we will tell to IOC which object should be injected into which object by using ref attribute.
+	2.Auto Wiring 
+	but IOC is intelligent IOC can identify the depedent and can inject into target by using AutoWiring.
+	-> AutoWiring means automatically it will identify the dependent and it will inject into target object but that autowiring will happen bydefalut we need to enable the autowiring  
+         in the target bean. 
+         By using the auto-wire="byName | byType | constructor | no" attribute we can enable autowiring in the target.
+	auto wiring is working based on the modes (byName, byType, constructor, no)
+ 	mostly we will use byType modes only because maybe we can change the name but we can't going to change type that's why we always go with byType modes only
+       if we don't want to use autowire="" then we should go with primary="true"  
+
+ -> Spring Bean LifeCycle ?
+ -> Spring Bean LifeCycle methods we can execute in how many ways ?
+	-> in 3 ways 
+	    1. XML Approach (Declarative)
+	    2. Programmatic Approach
+	    3. Annotations
+
+ * BEAN LIFECYCLE USING XML APPROACH
+		<bean id="motor" class="com.bharatnaik.beans.Motor" 
+   		init-method="start" 
+   		destroy-method="stop"/>
+ -> init-method="start" method will be called when the object is created for the bean
+ -> destroy-method="stop" when the object will removed from the container
+
+ -> ConfigurableApplicationContext cfg = (configurableApplicationContext)context;
+    cfg.registerShutdownHook(); -> it will going to remove the object from the container before going to finish it will call the 
+    destroy-method="stop" 
+
+ * BEAN LIFECYCLE USING PROGRAMATIC APPROACH
+ 	-> To Achieve this we have to implement 2 interface (InitializingBean(it is a functional interface), DisposableBean) 
+	-> we have to implement a method "afterPropertiesSet" which is belongs to "InitializingBean functional Interface".
+	-> we have to implement a method "destroy" which is belongs to "DisposableBean function interface"
+	-> it is not mandatory to implement both the interface we can implement any one interface also.
+
+   BEAN LIFECYCLE Definition ?
+	-> Bean life cycle will be managed by IOC Container as part of that life cycle process if we want to customise that bean                 object we can execute some logics, By executing the life cycle methods, 
+   		
+			So in 3 ways we can execute the life cycle methods those are  
+
+			1) XML Approach (Declarative)
+			2) Progrmmatic approach
+			3) Annotations
+ ######################
+ -> SPRING ANNOTATIONS
+ ######################
+ -> Annotations are used to represents Metadata
+ -> Annotations Introduced in Java 1.5v (From Spring 3.0v Spring also supporing for Annotations)
+ -> Annotations are alternate for XML Configuration
+ -> In Spring Framework we have several Annotations
+
+1) @Configuration   : To represent java class as Configuration class
+
+2) @ComponentScan : To identify Spring Bean classes available in the project based on "basePackageNames"
+
+3) @Component : To represent java class as Spring Bean.
+
+4) @Service: To represent java class as Spring Bean (Business layer classes)
+
+5) @Repository:  To represent java class as Spring Bean (Persistence layer classes)
+
+
+Conclusion : @Component, @Service, @Repository
+All three annotations make a class a Spring bean, but using the right one improves readability, organization, and tooling support (like Spring AOP or exception handling). It's a best practice to choose the most semantically appropriate annotation based on the class’s role.
+
+6) @Scope : To represent bean scope
+
+7) @Autowired : To perform dependency injection
+
+8) @Qualifier : To perform autowiring based on byName
+
+9) @Primary : To represent primary bean for Autowiring
+
+10) @Bean : To call the method which returns bean object
+
+
+-> Spring Starter Project : SpringBoot Project 
+-> Spring Legacy Project : Spring Framework/Spring Core/ Spring old version Project
+
+
+-> Boot Application will be start/begin form this class only which is (Application.java)
+ 	Spring Boot Start Class : It is the entry point for boot application execution.
+ 	 
+ 	NOTE : @SpringBootApplication This Single Annotation is equal to 3 Annotation 
+ 		   1. @SpringBootConfiguration 
+ 		   2. @EnableAutoConfiguration
+ 		   3. @ComponentScan
+ 	-> Boot start class act as a configuration class by default.
+ 	-> So whatever the things we manually we need to configure in spring those things are automated in Spring Boot.
+ 	   so we can say boot is one approach to develop an application with less/minimal configuration.
+ 	-> if we remove the @SpringBootApplication annotation then what will happen ?
+ 		= Component Scanning will not going to happen, it will create only current class object 
+ 		in current class object only getInstance() method will run.
+ 	-> So Writing the @SpringBootApplication annotation is become mandatory.
+ 	   why because 1. @SpringBootConfiguration 2. @EnableAutoConfiguration 3. @ComponentScan 
+ 	   these 3 things will be available because of @SpringBootApplication annotation.
+ 	   
+ 	What is SpringApplication.run() method ? 
+ 		it is a entry point for boot application execution
+ 		-> Spring boot start class main() method will call SpringApplication.run() method.
+ 		   This run() method will return reference of IOC.
+ 		   -> it is responsible for start IOC Container and return the reference of IOC.
+
+ -> @AutoConfiguratoin ?
+     => AutoConfiguration is a facility/feature availabel in the spring boot which will provide the configuration which is required for our application. 
+	whatever configuration that is required for the application it will be identified by using 'spring.factories' file, based on the dependencies we have added in the project it will identify the configuration.
+
+ NOTE :
+ -> So like that Start Class is acting as a configuration class and start class acting as a Auto Configuration enabling class as wll as it acting as a ComponentScan class also. (@ComponentScan annotation is responsible for identify spring bean present in our project) 
+
+ SpringApplication.run() ?
+ -> NOTE : SpringApplication is a predefined class and it will identify what type of application we have created based on depedencies added in pom.xml file.
+
+ -> Here we are not responsible to start the IOC Container the Start Class is responsible to start the IOC Container.
+ -> Which class it is using to start the IOC Container (AnnotationConfigApplicationContext)    
+ => Spring Boot start class main ( ) method will call SpringApplication.run ( ) method.
+
+=> SpringApplication.run ( ) is entry point for boot application execution. This run ( ) method will return reference of IOC.
+
+Note: SpringApplication is a predefined class and it will identify what type of application we have created based on dependencies added in pom.xml file.
+
+
+	=>  If we add "spring-boot-starter" ===> standalone  app
+	=>  for standalone app, It will use  "AnnotationConfigApplicationContext" class to start IoC container
+			
+	
+	=> If we add "spring-boot-starter-web"  ===> Web application
+	=> For web apps,  "AnnotationConfigServletWebServerApplicationContext"  class will used to start IoC container
+
+	
+	=> If we add  "spring-boot-starter-webflux" ===> Reactive Application
+	=> For reactive app, "AnnotationConfigReactiveWebServerApplicationContext" class will be used to start IoC container
+	
+
+Note: Based on Type of our application, It will start IOC container.
+
+=> run ( ) method will print banner on the console (i.e spring logo).
+
+=> run ( ) method will start IoC container
+
+=> run ( ) method will call runners 
+
+=> run ( ) method will return context of IoC container
+
+				
+		########   ConfigurableApplicationContext context = SpringApplication.run(Application.class, args); #######
+ 
+
+
+  SpringApplication.run() ?
+	1. Application Initialization
+	2. Environment Preparation
+	3. Banner Display (optional)
+	4. Application Context Creation
+	5. ApplicationContext Refresh
+	6. Run Application Runners
+	7. Application Ready
+
+ -> Bean LifeCycle is a class/bean level where Runner is at the project/application level.
+	
+	* application.properties file & application.yml
+ -> Properties file is used to configure properties in linear structure
+      Ex : server.port = 8080
+ -> UML file is used to cinfigure properties in hierarical structure
+      Ex : server:
+                  port : 8080
+
+ -> * Data Source will represents with which database we want to communicate, that the data source properties we can configure in application.properties or application.yml file.
+
+ ############### -> 20 video
+ Spring Data JPA
+ ###############
+
+ 
+ @Primary Annotation ?
+ -> In Spring Boot (Spring Framework), the @Primary annotation is used to indicate which bean should be given preference when multiple beans of the same type are present in the Spring context.
+
+ -> Why Use @Primary?
+When Spring encounters multiple beans of the same type, it throws a NoUniqueBeanDefinitionException unless you specify which bean to use. @Primary solves this by marking one of the beans as the default.
+
+
+ -> @Qualifier vs @Primary
+ @Primary: Used when you want one bean to be used by default.
+ @Qualifier: Used when you want to specify exactly which bean to use.
+ You can even combine them—@Primary for default, @Qualifier for specific overrides.
+
+ -> Entity Class (@Entity annotation) ?
+    # The class which is mapped with database table is only called Entity class, To make class as a Entity we make use of @Entity annotation with the class which we want to mapped with the database table.
+    # @Table Annotation is used to define the table name with the class name. it is optional if our class name and database name is same then we no need to use the "@Table(name="table_name")" with the class.
+    # @Column(name="column") annotation also optional for column name with the varibles with our class to mapped with the column of our database table's column name (it is also optional if the Entity class variable's name is same as the name of the database table column's name then we no need to use the "@Column(name="column_name")")
+
+ -> These are Most commenly used annotation when we are creating Entity classes.
+    1. @Entity
+    2. @Table
+    3. @Id
+    4. @Column
+ By using these annotations we can mapped our java  class with database table.
+ 
+ -> * Data Source will represents with which database we want to communicate, that the data source properties we can configure in application.properties or application.yml file.
+
+ -> *** Whenever our interface is exteding the properties from CrudRepository<Entity, Id> (Entity = Entity class name, Id = Datatype of the primary key) interface then internally JPA will provide the implementation for our Repository in the runtime by using Proxy. so what are the metods present in the repository all those methods we can access by using our Repository. Methods Ex : 
+
+ -> CrudRepository & JpaRepository is provided by Data JPA itself there are pre difine Repositories they are having the methods.
+
+ 1. save (Entity) - this method expect Entity Object as parameter = this method is used for performing both insert/update data.
+ 2. saveAll (Iterable <Entity>) 
+ *** that's why this method is called as "UPSERT" Method. (UPDATE + INSERT = UPSERT)
+ -> When ever we try to perform insert operation using 'save()' method then first internally it will check(using select query) is there any record present any the database table using Entity primary key if it is there then it will update else it will perform insert operation.
+  -> if the given data is available then 'update' if the given data is not available then 'insert'
+ 3. findById(ID id) passing the primary key as a parameters which will fetch/retrive single data based on the id parameters.
+ 4. findAllById(Iterable<ID> ids) 
+
+==========================
+Spring Data JPA Terminology
+==========================
+
+#####  1) Data Source Object : It represents Database Connections #######
+
+Note: Data Source properties we can configure in "application.properties" or "application.yml" file
+
+
+######  2) Entity Class : The class which is mapped with database table ########
+
+@Entity (To Represents the class which is mapped to database table )
+@Table (Optional if the class name and the table name is same)
+@Id (Primary Key)
+@Column (Optional if the variable name and the table column name is same)
+
+####  3) Repository interface : For  every Table we will create one repository interface to perform Crud Operations ###
+
+public interface StudentRepository extends CrudRepository<Student, Integer>{
+
+}
+
+Note: For our Repository interface, implementation will be provided in the runtime using Proxy Class.
+
+Note: By using StudentRepository we can perform CRUD operations in STUDENT_TBL
+
+###### 4) Repository methods : Ready made methods provided by Data JPA to perform CRUD operations #########
+
+ 
+ <--- First Application Development using Spring Data JPA --->
+
+ -> When the data JPA Dependency available in the pom.xml then is will scan for the Repository how many repositories are found and it will count and will print that count on the console and for those repository it will provide the implementation also.
+ 
+
+===========================
+findByXXX methods in Data JPA
+===========================
+
+=> By using findByXXX ( ) methods we can retrieve the data based on  non - primary key columns also
+
+=> When we write findByXXX method , JPA will construct query based on method name
+
+Note: Method Naming convention is very important for findByXXX methods
+
+=> Using findBy methods we can perform select operations only (retrieval).   INSERT / UPDATE / DELETE operations we can't do using findBy methods.
+
+Note : In findBy method syntax we will use entity variable names.
+ 
+
+-> In Total 3 ways we can Communicate with database by Using Data JPA
+	1. Using JPA pre-defined methods (Select + Non-Select)
+	2. Using findByXXX methods (Note : Only for select operations)
+	3. Using Custom Queries (Select + Non-select)
+
+ 
+ <--- Pagination ---> : Displaying table records in multiple pages is called as pagination.
+ 	ex :  -> Google Search Results will display with pagination. (Page size : 10)
+	      -> Gmail inbox mails will display with pagination(Per page we are getting 50 (Page Size 50) records out of total records).
+	      -> Flipkart Products will display with pagination (Page size : 24)
+
+
+ 
+   // What is the purpose of QueryByExample ?
+   // -> it is used to generate the Query Dynamically based on the data available in the given entity Object data.
+ 
+ 
+
+ Note : Whenever we perform any non-select operation through custom query then we need to enable Transaction required for this "@Transactional" annotation
+
+ -> if we want to use the delete method directly then JPA will take care of the Transaction/ if we call the pre-define method then JPA take care of the Transaction But if we want to perform any Non-Select Operation with the custom Query
+then we need to tell that, this method is for modifying by using @Modifying and to do this modifying/Data Manupulation Transaction is required, we are giving that information to that JPA to perform this operation.
+
+ => if we want to perform any non-select(DML operations = Data Manupulation operation) operation using Data JPA custom query then we should use these 2 annotation   
+    1. @Modifying annotation
+    2. @Transactional annotation
+ => The above annotations are not required for select Operations.
+
+
+ -> *** TimeStamping in Data JPA ***
+
+  -> TimeStamping concepts is used to populate the created date and updated date column values in the database.
+     we no need to set values for these 2 columns when we use this 2 annotations those values will be populated by default.
+c
+ @CreationTimestamp : it is used to populate record inserted date into DB Column.
+ @UpdateTimestamp : it is used to populate record updated date into DB column.  
+
+ NOTE : LocalDate class represents will date value, where as LocalDateTime class will represents Date with Time.
+
+
+
+ <--- Soft Delete & Hard Delete --->
+
+ => Hard Delete means deleting the record from DB permanently usin "Delete" query, once we perform Hard Delete we can't get data back from DB.
+ => Soft delete means updating the record as IN-ACTIVE. Soft Deleted records will present in DB so we can access whenever we want.
+ 
+ EX : Active / De-Active
+
+Note : We can implement SOFT DELETE using additional column in DB table (ACTIVE_SW)
+	
+	ACTIVE_SW = Y ----> Active record
+	ACTIVE_SW = N ----> Deleted record
+
+
+ -> @GeneratedValue(strategy = GenerationType.IDENTITY) 
+	// -> Here we are telling the JPA to use Identity Generator to generate the value for my primary key column.
+	// if we are using MySQL Database then we need to go for IDENTITY Generator to Generate the value for Primary Key Column. 
+	// Identity Generator will use internally Auto Increment Concept.
+	// Identity Generator will not work for Oracle Database. In the Oracle Database we will use "GenerationType=SEQUENCE" 
+	// if we make out GenerationType=AUTO Then based on the database it will going to pickup the generator.
+// NOTE : if we do some modification in "GenerationType" then we have to recreate the table to reflect the changes perfectly.
+ // There is another GenerationType=SEQUENCE it is supported in Oracle not in MySQL.(Instead it will create a table for the SEQUENCE)
+
+======   MYSQL DB  ========
+
+AUTO / SEQUENCE / TABLE ====> New table will be created to maintain primary column values
+
+IDENTITY ===> Will use AUTO_INCREMENT to generate value for Primary key column value
+
+Note: MySQL DB will not support Sequences.
+
+
+======= Oracle DB ==========
+
+AUTO  => sequence to generate primary key value (default sequence name : hibernate_sequence)
+
+SEQUENCE ===> We can configure our own sequence to generate PK value like below
+
+create sequence  pid_seq
+start with 1000
+increment by 1;
+
+TABLE   ====> New table will be created to maintain primary key   column values
+
+Note: Orace DB will not support for AUTO_INCREMENT
+
+============================== Configuring Table Generator ==================
+
+	@Id
+	@TableGenerator(initialValue = 100, name = "pid", table="pid_seq_tbl")
+	@GeneratedValue(strategy = GenerationType.TABLE, generator="pid")
+	private Integer productId;
+
+
+======================== Configuring Custom Sequence To Generate PK Value ==================
+
+=> First we need to create sequence in db like below
+
+
+create sequence  pid_seq
+start with 1000
+increment by 1;
+
+=> Configure Custom Sequence in Entity class like below
+
+	@Id
+	@SequenceGenerator(name = "pid", sequenceName = "pid_seq")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pid")
+	private Integer productId;
+
+	
+	* Type of Generator : 
+		    1. AUTO Generator
+		    2. SEQUENCE Generator
+		    3. TABLE Generator
+		    4. IDENTITY Generator
+		    5. CUSTOM Generator (Ex: Bharat1, Bharat2, bharat3)
+
+
+  <---- Composite Primary key ---->
+
+ --> Can we use Generator to work with Composite Primary Keys
+    ans : No we can't use generators to generate value for composite primary keys.
+    -> When we have normal primary key we can use generator to generate the primary key when we are having composite primary key we can't use generator. 
+
+
+ <--- Connection Pooling in Data JPA --->
+
+ -> Connection pooling is used to maintain connections required for our application.
+ 
+ => Note : Spring Data JPA will use "Hikari Connection Pool" by default.
+       -> that means Ready made connection will be available in the connection pool when ever we perform some operations it is not going communicate with the database to get the connection, Connections are already available available in the connection when the connection is created.
+     -> Whenever we start our application, if we have Data JPA Dependency in our pom.xml, then immediately connection will be created.
+    -> Can we say that it is also one of the Auto configuratin feature in the Spring Boot, we are not telling the spring to create the connection it is creating by default.
+    -> NOTE : if we have a Data JPA Dependency then it will start a "Connection Pool" to manage our connections required for database communication.
+    -> if we have added web-Starter Dependency then it will create "Embbeded Server"
+    
+    -> we can customise the Hikari pool connection configuration in yml/properties file.
+       by default it comes with some defalut configurations. but if we want we can customise according to our need also.
+   exp : 
+spring:
+  application:
+    name: 09-Data-JPA-Composite-PK
+  datasource:
+    url: jdbc:mysql://localhost:3306/sbms
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 20 ------> Here we are using the Hikari. (The defalut size of the Connection Pool is 10)
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true 
+	
+  -> Hikari connection pool is not related to any particular databases, it is common for all the databases.
+     Based on our data source configuration it will communicate with the database to get the connection.
+
+
+ <--- Association Mapping / Relationships in DB tables --->
+
+ 
+
+ -> One Record in one table will have multiple records in the another table with the foregin key relation is only called ONE TO MANY Mapping.
+    exp : One Employee will have multiple addresses.
+ 
+
+ <--- Spring Web MVC --->
+
+ -> Spring Web MVC is used to develop 2 types of applications.
+      1. Web Applications ( C 2 B )
+          Ex: Gmail, facebook, naukri etc..
+      2. Distributed Applications ( B 2 B )
+          Ex: MakeMyTrip ----> IRCTC, Passport -----> AADHAR (Passport Applicatoin internally Communicate with the Aadhar applicatoin.)
+
+  <--- This are the advatages we are getting by using Spring Web MVC --->
+
+ -> Web & Distributed applications development made easy. (No xml Configurations required)
+ -> Form Data Binding To Java Ojbects (one of the most important feature availabe in the Web MVC)
+ -> Flexibility in Form Binding (Type Casting will be done) :: from form we will get string type of data but spring mvc will do the typecasting and store the data according to our variable data type. (spring mvc will take care of these things)
+ -> Form Validations (Server Validation) :: if the user input some invalid data then the spring mvc will validate the data and display the suitable error message.
+ -> Supports Multiple Presentation Technologies :: (Ex: Jsp & thymeleaf) where as Servlet only supports single Jsp.
+ -> Embedded Servers (Defalut Embedded Server we get is "Apache Tomcat" Server)
+    
+
+=============================
+Spring Web MVC Architecture
+==============================
+
+1) Dispatcher Servlet  : It acts as a front controller
+
+2) HandlerMapper : It will identify which request should be processed by which controller and which method
+
+3) Controller : It will handle request and decides response to send using ModelAndView object.
+
+4) ModelAndView : Model represents data in key-value format. View Represents logical file name to display.
+
+5) View Resolver : It is used to identify physical location of view files
+
+6) View : It is used to render model data on view file.
+
+  ===== Here's a complete breakdown of Spring Web MVC architecture—with a clear diagram to visually explain each part 📐: ====
+
+🏗️ 1. Front Controller — DispatcherServlet
+
+A single Servlet that receives all incoming HTTP requests (configured via web.xml or auto-registered in Spring Boot).
+Acts as the Front Controller, orchestrating the entire request lifecycle 
+
+2. HandlerMapping → HandlerAdapter → Controller 🧭
+
+HandlerMapping: Matches incoming URLs to controller methods (typically those annotated with @RequestMapping, @GetMapping, etc.) .
+HandlerAdapter: Once a handler is identified, the adapter invokes that specific controller method
+
+Controller: Executes your business logic, interacts with services/models, and returns a ModelAndView containing:
+Model: Data to be displayed
+View Name: Logical identifier (e.g., "home") 
+
+3. View Resolution
+
+ViewResolver (e.g., InternalResourceViewResolver) converts the logical view name into an actual resource (like a JSP or Thymeleaf template), using configurable prefixes/suffixes 
+
+Supports chaining multiple view resolvers (e.g., JSP + Excel views) 
+
+4. Rendering the Response
+
+The selected view consumes the Model data and renders the final output (HTML, JSON, etc.) which the DispatcherServlet returns to the client 
+
+🔁 Full Request Workflow
+
+Client sends a request (e.g., via browser).
+DispatcherServlet intercepts it.
+It uses HandlerMapping to find a matching controller.
+HandlerAdapter invokes the controller method.
+Controller processes logic and returns ModelAndView.
+DispatcherServlet consults ViewResolver to get the View.
+The View renders content using Model data.
+DispatcherServlet sends the rendered result back to the client.
+Diagram simplified:
+
+Client → DispatcherServlet → HandlerMapping → Controller
+        ← ViewResolver ← View ← ModelAndView ← controller logic
+        → Response to client
+🧩 Components Overview
+
+Component	Role
+DispatcherServlet	Front controller and request coordinator
+HandlerMapping	Maps requests to appropriate handlers
+HandlerAdapter	Executes controller methods
+Controller	Contains business logic and returns ModelAndView
+Model	Stores data to display
+ViewResolver	Resolves logical names to actual views
+View	Renders the response
+Adding Extras	Interceptors, exception resolvers, formatters, file upload, locale, etc. 
+
+✅ Why This Architecture?
+Clear separation of concerns: Data (Model), logic (Controller), and presentation (View) are cleanly separated 
+
+Extensibility: Modules like HandlerMapping, ViewResolver, and View can be customized or replaced.
+Scalability & Maintainability: Each component does one job, making apps easier to test and evolve.
+
+  *** -> Spring Boot internally uses Spring MVC to develop web applications—especially for building REST APIs and traditional web apps.
+
+  ✅ How Spring Boot Uses Spring MVC Internally ?
+Spring Boot is not a replacement for Spring MVC—rather, it is a convention-over-configuration layer on top of the Spring ecosystem, which includes:
+
+ 1. Spring MVC for web/REST controllers
+ 2. Spring Core for dependency injection (IoC)
+ 3. Spring Web module, which includes Servlet support, DispatcherServlet, etc.
+
+ =====> What internally happens in Spring Web MVC Architecture <======
+    -> When Customer access our web application by using the url first request is recieved by Request DispatcherServlet.
+    -> DispatcherServlet will forward the request to the HandlerMapper, DispatcherServlet is a pre-defined Servlet class.
+       it will take the request, The incoming request will be captured by DispatcherServlet it will give the request to HandlerMapper.
+    -> Based on the Url Pattern HandlerMapper will identify This request should be processed by which Controller then it will give the Controller Information to the DispatcherServlet.
+    -> Then DispatcherServlet will go and call that Controller method then Controller will Execute that logic. Controller will talk to Service, Service will talk to Repository it will perform the operations finally Controller will Going to Return Model&View Object 
+    -> Model Represents Data in the form of Key & Value, View represents Logical File. 
+    -> Controller will Execute the logic and Controller will return Model and View Object.
+    -> Then DispatcherServlet will Take the View name and will talk to Viewresolver 
+    -> So what is the Duty of ViewResolver here ? ans: ViewResolver is used to identify the location of View Files then it will give location to the Dispatcher then Dispatcher will Give ModelData and View location to the View Component.
+    -> Then View Component will render the Modeldata and View will give to the Dispatcher.
+    -> Then Dispatcher will send the final responce to client.
+ This is only Spring MVC Architecture.
+
+  
+  ===========================================
+Building First Spring Web MVC Application
+===========================================
+
+1) Create Spring Boot application with below dependencies
+
+		a) spring-boot-starter-web (Starter-web is a dependency that is used to devlop the web application by using spring)
+		b) tomcat-embed-jasper (it is used to compile Jsp Files in the boot application)
+		c) spring-boot-devtools (it is used to restart the server, Whenever we make some changes code it will automatically restart the server)
+
+2) Create Controller class using @Controller annotation
+
+  "DispatcherServlet is Pre-defined, HandlerMapper is Pre-defined, ViewResolver is Pre-defined, View is Pre-defined, Only we have to take care of Controller(Only one Controller is required)"
+
+3) Write required methods in Controller class and bind them to Http Request Methods
+
+4) Create Presentation file ( jsp ) with presentation logic
+
+5) Configure View Resolver in application.properties file
+
+6) Run the application and test it.
+
+ => ServletInitializer class : This ServletInitializer class is going to take care of all the resources that are required for our web application
+  	-> So what are the resources that are required to be loaded for our web application those resources will be taken care by ServletInitializer class.
+
+
+    *** -> model is a object which is similar to Map.
+	we are sending the data from server to UI by using 'model'.
+			
+	*** -> Earlier we have seen Query parameter & path parameter it is used to send the data from client to server.
+	   and model is used to send the data from server to UI.
+
+ 
+  <<<--- IN TWO WAYS WE CAN CREATE AN CONTROLLER METHOD --->>
+  
+  Note : Method return type is string which represents logical view name. Model is used to send data form controller to UI in key-value format.
+
+   1st Way...
+
+     @GetMapping("/welcomemsg")
+	public ModelAndView getWelcomeGreetMsg(@RequestParam String name) {
+		ModelAndView modelAndView = new ModelAndView();
+		
+		modelAndView.addObject("msg", name + " welcome to spring Bhai...");
+		
+		modelAndView.setViewName("index");
+		
+		return modelAndView;
+	}
+	
+   2nd Way... (Most of the people follow this approach only.)
+	
+	@GetMapping("/greet")
+	public String getGreetMsg(@RequestParam String name, Model model) {
+		
+		/*
+		 -> model is a object which is similar to Map.
+		    we are sending the data from server to UI by using 'model'.
+			
+		-> Earlier we have seen Query parameter & path parameter it is used to send the data from client to server.
+		   and model is used to send the data from server to UI.
+			
+			
+			-> Whatever the "model" is available that model we are taking as a method parameter, 
+		    -> whatever the data we want to send to the UI, that we are storing that data into the model object That Data         we can send by using this model object.
+		       
+		 */
+		
+		model.addAttribute("msg", name + " Good Evening !");
+		
+		return "index"; 
+		// Whatever the String data is returning here that is represents the logical 'view' name.
+	}
+}
+
+
+ -> Spring Boot Starter Validation ?
+
+_________________________
+
+ 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
+ -> Weather we add or not add this tomacat depedency spring boot starter web is giving as default tomcat embbed server.
+ -> to exclude the tomcat server from our spring boot starter web we should make use of exclusions tag.
+<exclusions>
+	<exclusion>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-tomcat</artifactId>
+	</exclusion>
+</exclusions>
+
+
+ -> @ResponseBody -> when we attached this annotation in the method then DispatcherServlet will thing that ok this person is giving a Response Directly  (Whenever the @ResponseBody is not available then the return return value it will treat as a View file name) Bu here it will treat the method level return value as a Direct Response to the client.
+
+
+========================================
+What is Interceptor in Spring Web MVC ?
+========================================
+
+-> We can use Interceptor to perform pre-processing and post-processing of every request
+
+			Pre-Processing : Before Request Procesing by Controller method
+
+			Post-Processing : After request processed by controller method
+
+-> Using Interceptor we can trap each and every request
+
+		
+Use case for Interceptor
+-------------------------
+1) Calculate Each Request processing time
+
+2) Log Each Request and Response details
+
+3) Request Authentication etc...
+
+========================================
+Exception Handling in Spring Web MVC
+========================================
+
+-> Exception means un-expected and un-wanted situation
+
+-> Exception distrubs normal flow of our application execution
+
+-> When exception occurs then our program will terminate abnormally
+
+-> As a developer we should handle exception to achieve graceful termination of our application.
+
+-> To handle exceptions, Java provided below keywords
+
+1) try
+2) catch
+3) throw
+4) throws
+5) finally
+
+
+=> To handle Exceptions in Spring Web MVC application then we can create a method and we can use below annotation
+
+					@ExceptionHandler
+
+=> When exception occurs then we will redirect user to error page like below.
+
+@ControllerAdvice
+public class GlobalExceptionHandler {
+
+	@ExceptionHandler(value = Exception.class)
+	public ModelAndView handleAE(Exception ex) {
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("page");
+		return mav;
+	}
+}
+
+
+Note : here error represents our error page which display some message to client to try after sometime.
+
+=============
+Requirement:
+=============
+
+1) Develop one To-Do task application. Application should contains below functionalities
+
+	a) User Registration (Name, Email, Pwd, Gender & Phno )
+
+	b) User Login (Email & Pwd)
+
+	c) Create Task ( Task Name, Date, Timing )
+
+	d) View Tasks
+
+Note: Task Creation & Display Tasks functionality should work based on Logged in user.
+
+e) Logout
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+=========================================================================================
+
+1) What is Spring Web MVC ?
+
+2) Advantages of Spring Web MVC ?
+
+3) Spring Web MVC Architecture
+
+				- DispatcherServlet
+				- HandlerMapper
+				- Controller
+				- ModelAndView
+				- ViewResolver
+				- View
+
+4) What is Embedded Server (Ex : Tomcat & Jetty )
+
+5) Building Web Application using Spring Boot
+
+6) What is @Controller ?
+
+7) What is @GetMapping & @PostMapping ?
+
+8) What is Query Params and how to work with them ? ( @RequestParam )
+
+9) What is Path Params and how to work with them ? ( @PathVariable )
+
+10) Form Based Application Development
+
+11) Spring Web MVC form tag library
+
+12) What is Thymeleaf ?
+
+13) Form Validation ( validation-starter )
+
+14) What is @ResponseBody annotation ?
+
+15) How to make jetty as default embedded server.
+
+16) How to configure H2 Database (Embedded Database)
+
+17) Web app development using => Web MVC + Data JPA + H2 DB
+
+ 
+
+  -> What is JAX-B Api ?
+   => Sun Micro System provide JAX-B, JAX-B Stands for Java Architecture for XML Binding.
+   => Using JAX-B API we can convert xml data to java object and java object to xml data.
+             Marshalling : Converting Java Object to XML Data. 
+             Un-Marshalling : Convert XML data to java Object.
+   => To perform Marshalling & Un-Marshalling we need to create Binding Classes.
+   => Binding Class means the class which represents XML structure.
+
+ Note : Upto JDK 2.8v is part of JDK Software. From JDK 1.9 or above version gave jax-b dependency (Demand is decrease of XML).
+ Note : from java 1.9v or avobe versions should habe jax-b dependency.
+
+
+===============
+HTTP Protocol
+===============
+
+ -> Note : HTTP is a protocol that we are using as a mediator between client and server.
+           Every REST API should binded to HTTP Protocol methods like (GET, POST, PUT, DELETE)
+           @GetMapping, @PostMapping, @PutMapping, @DeleteMapping
+ -> When client send a request to a server, Server will send the response along with the status code.
+
+
+=> HTTP stands for Hypertext Transfer Protocol
+
+=> HTTP acts as mediator between Client & Server
+
+=> HTTP is a stateless protocol. It will treat every request as a new request. (it can no remember the conversation happend between client and server)
+
+Note: To develop REST API we should know below details about HTTP Protocol.
+
+1) HTTP Methods
+
+2) HTTP Status Codes
+
+3) Http Request
+
+4) HTTP Response
+
+
+================
+HTTP Methods
+================
+
+GET  ===> To get data from server to client
+POST ===> To send data from client to server
+PUT  ===> To update data at server
+DELETE ===> To delete data from server
+
+Note: Every REST API method/endpoint should be binded to HTTP Protocol method
+
+=> getTicketData ( ) ---> HTTP GET Method ---> @GetMapping
+
+=> bookTicket(..) ---> HTTP POST Method ----> @PostMapping
+
+=> updateProduct (..) --> HTTP PUT Method ----> @PutMapping
+
+=> deleteBook (..) ---> HTTP DELETE Method ---> @DeleteMapping
+
+====================
+HTTP Status Codes
+====================
+
+=> Server will send HTTP Status code to client in the response
+
+=> HTTP Status codes will indicate how server processed our request
+
+1XX (100 to 199) => Informational status code
+
+2XX (200 to 299) => SUCCESS status code (OK)
+
+3XX (300 to 399) => Redirectional
+
+4XX (400 to 499) => Client Error
+
+5XX (500 to 599) => Server Error
+ 
+ -> out of these we can only see 2xx, 4xx and 5xx. 
+
+====================
+HTTP Request Packet
+====================
+
+1) Request Line   ( HTTP Method + Request URL )
+
+			Ex:	  GET  www.irctc.com/ticket/13454
+
+2) Request Header  (Meta data)
+
+	Ex : 
+  * Content-Type = application/json (it defines in which format(xml/json) client is sending the data to the server as request)
+  * Accept = application/json (it defines in which format(xml/json) client is expecting data from server as response )
+  * Authentication = uname:pwd
+  * Token = sldfjdlsfyso
+ 
+ -> all the information client will send to the server in the request packet.			
+
+3) Request Body  (Payload) 
+
+			Ex:  xml or json data
+
+================
+HTTP Response
+================
+
+1) Response Line   ( Https Status Code + Status Msg )
+
+			Ex: 200 OK
+
+2) Response Header  (Meta data)
+
+			Content-Type : application/json
+			Content-Length : 100
+			Date: mm/dd/yyyy
+
+3) Response Body  (Payload)
+
+			Ex: xml data or json data
+
+___________________________________________________________
+  
+ package com.bharatnaik.rest;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.bharatnaik.binding.Customer;
+
+@RestController // -> Representing java class as a RestController.
+public class CustomerRestController {
+	
+	@GetMapping("/customer")
+	public Customer getCustomer() {
+		
+		Customer customer = new Customer();
+		
+		customer.setName("Sharada");
+		customer.setEmail("Sharada@gmail.com");
+		customer.setGender("FeMale");
+		
+		return customer;  // Here we are returning Customer object.
+		/*
+			->  here when we run the project and call this method using url pattern we are getting JSON as a response.
+			->  we no need to convert java object into JSON so send a response internally Spring Boot only doing this thing.
+			
+	  *** -> whenever our method returning a object and if our method is a RestController method then Spring Boot will understand that.
+			 this method returning object, objects are not used in the Rest API Development so let's convert this object to the JSON format and send that JSON as response.
+			 
+		-> Here we are not writing the logic to convert java object into JSON using Jackson/Gson API, Spring Boot only doing this thing internally automatically using Jackson Api when we use @RestController annotation.
+		 */
+	}
+}
+
+
+ -> @RequestBody annotation is used to take the data from the request body and store into object 
+    -> it is used to represent that, this object data will come from the requst body from the client, take the data from the body and store into java object.
+    Example : public ResponseEntity<String> InsertData(@RequestBody Customer customer) {
+
+                      // logic to insert data into the database
+                       
+                       return ResponseEntity<>("Insertion Successful...", HttpStatus.CREATED);
+                   }
+
+ ------------
+ Swagger
+ ------------
+ -> Swagger is an open-source framework use for designing, building, documenting, and consuming RESTful APIs.
+ -> It provides a standardized way to describe the structure of an API, making it easier for developers to understand, integrate, and consume the API.
+
+ ------------
+ SpringFox
+ ------------
+ -> Springfox is a Java library used to integrate Swagger with Spring Boot applications. It automatically generates Swagger documentation from your Spring controllers and models.
+springfox-boot-starter: A starter dependency to quickly set up and integrate Springfox into a Spring Boot project.
+
+ ------------------
+ Springdoc OpenAPI (It is the latest alternation for SpringFox)
+ ------------------
+ -> Springdoc OpenAPI is an alternative to SpringFox. It is designed to generate API documentation from Spring Boot applications using the OpenAPI 3 specification, which it the latest iteration of the Swagger sprcification.
+ -> springdoc-openapi-ui: A module that integrates Spring Boot applications with Swagger UI using the OpenAPI 3 Specification.
+
+
+
+ ---> Spring Data Rest <---
+ -> It is used to simpliy REST API development
+ -> We no need to create REST controllers to perform CRUD operations with DB table when we use Spring Data REST .
+ => If we don't have any business logic, we just want to perform crud operation then we can go with Spring Data REST,
+    Which will save our development time.
+
+ 
+ 
+
+=========
+HATEOS
+=========
+-> HATEOS (hypermedia as the Engine of Application State)
+
+-> It is one of the REST Architecture Principle
+
+-> It is used to send response along with hyperlinks for related data
+
+Ex:   
+
+URL : http://localhost:8080/customer/101
+
+{
+	"id" : 101,
+	"name" : "John",
+	"email" : "john@gmail.com",
+
+	"links" :{
+		"url" : "http://localhost:8080/customers"	
+	}	
+}
+
+=> In springboot we have HATEOS starter to develop REST API with HATEOS concept.
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-hateoas</artifactId>
+		</dependency>
+
+
+
+ NOTE : Put & Patch Both are used to update the resources only but Put is used to update the complete resource information. where Patch is used to update a particular field in the resource.
+
+ -> PUT => To Update complete resource data (User : id, name, age, dob) "When we want to update complete profile resource data that method should mapping to @PutMapping" (In put we need to send/pass all the parameters to update the resource fields if we left one field also then that field will be filled with default value)
+
+ -> PATCH => To Update particular fields in resource (Order : id, prive, status) "Whenever our method is responsible to update a particular field the we should go with @PatchMapping"
+
+
+
+
+ <<<=== MicroServices ===>>>
+
+
+Service Registry : it is used to moniter/see all the backend services available in the project.  
+  
+Steps to develop Service Registry Application (Eureka Server)
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+1) Create Service Registry application with below dependency
+
+	 a) EurekaServer (spring-cloud-starter-netflix-eureka-server)
+	 b) web-starter
+	 c) devtools	
+
+2) Configure @EnableEurekaServer annotation in boot start class
+
+3) Configure below properties in application.yml file
+
+server:
+  port: 8761
+  
+eureka:
+  client:
+    register-with-eureka: false
+
+Note: If Service-Registry project port is 8761 then clients can discover service-registry and will register automatically with service-registry. If service-registry project running on any other port number then we have to register clients with service-registry manually.
+
+4) Once application started we can access Eureka Dashboard using below URL
+
+		URL : http://localhost:8761/
+
+
+
+
+Admin server : 
+   -> So whenever we access admin server url we are getting one UI(User Interface)
+   -> In this UI(User Interface) so basically our backend APIs will registred with this admin server.
+      and Using this admin server we can monitor activator endpoints of all the backend APIs.
+
+
+
+Zipkin Server :
+     -> Zipkin is used for log traceing how many services involbed in the request processing what is the time that taken by the service to process the request 
+
+ @RefreshScope ?
+
+
+ -> Circuit Breaker (it is design pattern) what we are trying to achieve using circuit breaker disign pattern ?
+        -> we are going to execute fallback logic when main logic is failed.
+	-> To develop resilience systems/fault-tolerance system we are going for circuit breaker.
+
+	-> *(Circuit Breaker is a Design pattern which is used to develop Fault-Tolerance System/resilience System)
+
+	-> Circuit Breaker is used to execute fault tolerence systems with some fallback logics.
+        -> When the main logic is failed to execute then we will open the circuit breaker to execute the fallback logic, that is called fault-tolerance system.
+
+
+ -> Spring Security with JDBC Authentication ?  
+ -> OAuth 2.0 ?
+
+ -> JWT (JSON Web Tokens)
+	- it is used to Secure our REST API.
+	- In our Rest Api 2 methods will be available one method is used to get the Token and another method is used to process the 
+ the request along with the Token.
+
+ -> @Bean annotation we can use in method for return object for IOC Container only in Configuration file which is annotated with @Configuration.
+    
+ 
+
+
+
+
+
+
